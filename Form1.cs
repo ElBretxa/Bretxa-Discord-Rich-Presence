@@ -29,10 +29,17 @@ namespace Bretxa_s_Discord_Rich_Presence
         private List<string> ids = new List<string>();
         private int x;
         private int y;
+        private string appDataFolderPath;
+
         public BretxaRichPresence()
         {
             InitializeComponent();
-            
+
+            string appName = "BretxaRichPresenceDiscord";
+            appDataFolderPath = GetAppDataFolderPath(appName);
+
+            Console.WriteLine("AppData Folder Path: " + appDataFolderPath);
+
             loadprofiles();
 
             clientid.Click += clientid_Click;
@@ -164,6 +171,8 @@ namespace Bretxa_s_Discord_Rich_Presence
         {
             TimeSpan elapsedTime = DateTime.UtcNow - startTime;
             state.Text = $"{elapsedTime.ToString(@"hh\:mm\:ss")} elapsed";
+            state.Enabled = false;
+            
             try
             {
                 RichPresence presence = new RichPresence()
@@ -283,7 +292,7 @@ namespace Bretxa_s_Discord_Rich_Presence
             int position = names.IndexOf((string)comboBox1.SelectedItem);
             string selectedId = ids[position];
             string imageUrl = "https://cdn.discordapp.com/app-assets/" + clientid.Text + "/" + selectedId + ".png";
-            string appLocation = Application.StartupPath + "/previewimage" + imagenum + ".png";
+            string appLocation = appDataFolderPath + "/previewimage" + imagenum + ".png";
             imagenum += 1;
             using (WebClient client = new WebClient())
             {
@@ -331,7 +340,7 @@ namespace Bretxa_s_Discord_Rich_Presence
 
             string jsonString = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
 
-            string filePath = profilename.Text + ".json";
+            string filePath = appDataFolderPath + "/" + profilename.Text + ".json";
 
             File.WriteAllText(filePath, jsonString);
 
@@ -340,14 +349,13 @@ namespace Bretxa_s_Discord_Rich_Presence
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            File.Delete(profilename.Text + ".json");
+            File.Delete(appDataFolderPath + "/" + profilename.Text + ".json");
             loadprofiles();
         }
 
         public void loadprofiles()
         {
-            string defaultDirectory = Environment.CurrentDirectory;
-            string[] jsonFiles = Directory.GetFiles(defaultDirectory, "*.json");
+            string[] jsonFiles = Directory.GetFiles(appDataFolderPath, "*.json");
 
             int jsonFileCount = jsonFiles.Length;
 
@@ -467,9 +475,30 @@ namespace Bretxa_s_Discord_Rich_Presence
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void BretxaRichPresence_Load(object sender, EventArgs e)
+        public static string GetAppDataFolderPath(string appName)
         {
+            string appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), appName);
 
+            if (!Directory.Exists(appDataFolderPath))
+            {
+                Directory.CreateDirectory(appDataFolderPath);
+            }
+
+            return appDataFolderPath;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                state.Enabled = false;
+                state.Text = "00:00:00 elapsed";
+            }
+            else
+            {
+                state.Enabled = true;
+                state.Text = "";
+            }
         }
     }
 }

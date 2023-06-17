@@ -326,6 +326,7 @@
             this.checkBox1.TabIndex = 23;
             this.checkBox1.Text = "Elapsed Time";
             this.checkBox1.UseVisualStyleBackColor = false;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // pbutton2
             // 
@@ -511,7 +512,6 @@
             this.Name = "BretxaRichPresence";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "⠀";
-            this.Load += new System.EventHandler(this.BretxaRichPresence_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
