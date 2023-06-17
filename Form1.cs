@@ -189,6 +189,10 @@ namespace Bretxa_s_Discord_Rich_Presence
                     catch (Exception ex)
                     {
                         MessageBox.Show("Invalid link, enter a valid one! \n\n" + ex);
+                        if (client.IsInitialized == true)
+                        {
+                            client.Dispose();
+                        }
                     }
 
                 }
@@ -204,6 +208,10 @@ namespace Bretxa_s_Discord_Rich_Presence
                     catch (Exception ex)
                     {
                         MessageBox.Show("Invalid link, enter a valid one! \n\n" + ex);
+                        if (client.IsInitialized == true)
+                        {
+                            client.Dispose();
+                        }
                     }
                 }
                 client.SetPresence(presence);
@@ -246,10 +254,10 @@ namespace Bretxa_s_Discord_Rich_Presence
                         ids.Add(id);
                     }
 
-                    for (int i = 0; i < names.Count; i++)
+                    /*for (int i = 0; i < names.Count; i++)
                     {
                         Console.WriteLine($"Name: {names[i]}, ID: {ids[i]}");
-                    }
+                    }*/
 
                     comboBox1.Items.Clear();
                     comboBox1.Items.AddRange(names.ToArray());
@@ -309,7 +317,16 @@ namespace Bretxa_s_Discord_Rich_Presence
                 clientidtext = clientid.Text,
                 detailstext = details.Text,
                 statetext = state.Text,
-                imageselected = (string)comboBox1.SelectedItem
+                imageselected = (string)comboBox1.SelectedItem,
+                chebox1 = buttonbox1.CheckState,
+                buttontext1 = textBox1.Text,
+                buttonurl1 = textBox3.Text,
+                chebox2 = buttonbox2.CheckState,
+                buttontext2 = textBox2.Text,
+                buttonurl2 = textBox4.Text,
+                timeelpased = checkBox1.CheckState,
+
+
             };
 
             string jsonString = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
@@ -371,6 +388,13 @@ namespace Bretxa_s_Discord_Rich_Presence
                         details.Text = (string)json["detailstext"];
                         state.Text = (string)json["statetext"];
                         comboBox1.SelectedItem = (string)json["imageselected"];
+                        buttonbox1.Checked = (bool)json["chebox1"];
+                        textBox1.Text = (string)json["buttontext1"];
+                        textBox3.Text = (string)json["buttonurl1"];
+                        buttonbox2.Checked = (bool)json["chebox2"];
+                        textBox2.Text = (string)json["buttontext2"];
+                        textBox4.Text = (string)json["buttonurl2"];
+                        checkBox1.Checked = (bool)json["timeelpased"];
                     }
                     catch (Exception ex)
                     {
