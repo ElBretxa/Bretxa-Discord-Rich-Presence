@@ -1,4 +1,4 @@
-# Discord Rich Presence App
+# Bretxa's Discord Rich Presence App
 
 This is a simple C# application that enables you to set a rich presence status in Discord. With this app, you can customize and display your own status messages, game information, and more on your Discord profile.
 
