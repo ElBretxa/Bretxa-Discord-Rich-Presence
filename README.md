@@ -17,27 +17,25 @@ Before using this application, you need to have the following:
 
 ## Installation
 
+Download the executable from [here](https://cdn.discordapp.com/attachments/1058794706613571744/1119647672899481701/Bretxas_Discord_Rich_Presence.exe) and start it directly!
+
 1. Clone or download this repository to your local machine.
 2. Open the project in your preferred C# development environment.
 3. Restore the NuGet packages for the project if necessary.
 
 ## Configuration
 
-1. Obtain a Discord Developer Application Client ID.
-2. Add the Discord Client ID to the application.
-3. Upload an image to the Rich Presence Assets.
-4. Retrieve the Rich Presence Image Key.
-5. Configure the application.
+1. Create a Discord Developer Application and get the Client ID/Application ID.
+2. Upload an image to the Rich Presence Assets.
+3. Configure the application.
 
 ## Usage
 
-1. Build and run the application using your development environment.
-2. The application interface will be displayed.
-3. To set a rich presence status:
-   - Select a profile or create a new one.
-   - Fill in the State, Details, and Image fields.
-   - Click the Launch RP button.
-4. To save a profile:
+1. Start the application.
+2. Fill the client id.
+3. If you want to use the image previously uploaded to Rich Presence Assets, click fetch and select it.
+4. Click Launch RP and have fun!
+5. To save a profile:
    - Fill in the desired settings for the profile.
    - Click the Save button.
 
@@ -55,6 +53,6 @@ This application is provided as-is and is not affiliated with or endorsed by Dis
 
 ## Contact
 
-If you have any questions or need further assistance, you can reach out to me at your-email@example.com.
+If you have any questions or need further assistance, you can reach out to me at 123bretxa45@gmail.com.
 
 Enjoy customizing your Discord rich presence status!
