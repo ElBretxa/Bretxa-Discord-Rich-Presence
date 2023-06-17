@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using System.Diagnostics;
 
 namespace Bretxa_s_Discord_Rich_Presence
 {
@@ -37,8 +38,6 @@ namespace Bretxa_s_Discord_Rich_Presence
 
             string appName = "BretxaRichPresenceDiscord";
             appDataFolderPath = GetAppDataFolderPath(appName);
-
-            Console.WriteLine("AppData Folder Path: " + appDataFolderPath);
 
             loadprofiles();
 
@@ -499,6 +498,11 @@ namespace Bretxa_s_Discord_Rich_Presence
                 state.Enabled = true;
                 state.Text = "";
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://discord.com/developers/applications");
         }
     }
 }
