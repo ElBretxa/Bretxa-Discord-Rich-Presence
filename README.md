@@ -1,4 +1,9 @@
-# Bretxa's Discord Rich Presence App
+<h1 align="center">
+    <a href="#"><img src="https://media.discordapp.net/attachments/1061361693650845736/1123377850968453120/image.png?width=854&height=434" width="450" alt="SERVER UP BOT"></a>
+    
+   ⚡ Bretxa's Discord Rich Presence App ⚡
+</h1>
+
 
 This is a simple C# application that enables you to set a rich presence status in Discord. With this app, you can customize and display your own status messages, game information, and more on your Discord profile.
 
