@@ -21,6 +21,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using System.Diagnostics;
+using Bretxa_s_Discord_Rich_Presence.Properties;
 
 namespace Bretxa_s_Discord_Rich_Presence
 {
@@ -31,6 +32,7 @@ namespace Bretxa_s_Discord_Rich_Presence
         private int x;
         private int y;
         private string appDataFolderPath;
+        private NotifyIcon notifyIcon;
 
         public BretxaRichPresence()
         {
@@ -44,12 +46,6 @@ namespace Bretxa_s_Discord_Rich_Presence
             clientid.Click += clientid_Click;
             details.Click += details_Click;
             state.Click += state_Click;
-        }
-        public class Asset
-        {
-            public string Id { get; set; }
-            public int Type { get; set; }
-            public string Name { get; set; }
         }
 
         DiscordRpcClient client;
@@ -159,12 +155,13 @@ namespace Bretxa_s_Discord_Rich_Presence
                 }
                 client.SetPresence(presence);
             }
-
         }
+
         private void PresenceTimer_Tick(object sender, EventArgs e)
         {
             UpdatePresence();
         }
+
 
         private void UpdatePresence()
         {
@@ -183,6 +180,7 @@ namespace Bretxa_s_Discord_Rich_Presence
                         LargeImageKey = (string)comboBox1.SelectedItem
                     }
                 };
+
                 if (buttonbox1.Checked && buttonbox2.Checked)
                 {
                     try
@@ -503,6 +501,56 @@ namespace Bretxa_s_Discord_Rich_Presence
         private void button4_Click(object sender, EventArgs e)
         {
             Process.Start("https://discord.com/developers/applications");
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            this.ShowInTaskbar = false;
+
+            notifyIcon = new NotifyIcon();
+            notifyIcon.Icon = this.Icon;
+            notifyIcon.Visible = true;
+
+            notifyIcon.MouseClick += NotifyIcon_MouseClick;
+
+            ContextMenu contextMenu = new ContextMenu();
+
+            MenuItem closeMenuItem = new MenuItem("Cerrar");
+            closeMenuItem.Click += CloseMenuItem_Click;
+            contextMenu.MenuItems.Add(closeMenuItem);
+
+            notifyIcon.ContextMenu = contextMenu;
+        }
+
+        private void NotifyIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.Show();
+            }
+            //this.BringToFront();
+        }
+
+        private void CloseMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+            }
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            notifyIcon.Dispose();
         }
     }
 }
