@@ -43,6 +43,12 @@ namespace Bretxa_s_Discord_Rich_Presence
 
             loadprofiles();
 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
+            comboBox1.KeyDown += comboBox1_KeyDown;
+            comboBox1.Leave += comboBox1_Leave;
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDown;
+            comboBox2.KeyDown += comboBox2_KeyDown;
+            comboBox2.Leave += comboBox2_Leave;
             clientid.Click += clientid_Click;
             details.Click += details_Click;
             state.Click += state_Click;
@@ -50,38 +56,29 @@ namespace Bretxa_s_Discord_Rich_Presence
 
         DiscordRpcClient client;
         private int imagenum = 0;
-        private bool clientidclick = true;
-        private bool detailsclick = true;
-        private bool stateclick = true;
         List<System.Windows.Forms.Button> buttons = new List<System.Windows.Forms.Button>();
 
         private void clientid_Click(object sender, EventArgs e)
         {
-            if (clientidclick)
+            if (clientid.Text == "Client ID")
             {
-                // Clear the text box on the first click
                 clientid.Text = string.Empty;
-                clientidclick = false;
             }
         }
 
         private void details_Click(object sender, EventArgs e)
         {
-            if (detailsclick)
+            if (details.Text == "Details")
             {
-                // Clear the text box on the first click
                 details.Text = string.Empty;
-                detailsclick = false;
             }
         }
 
         private void state_Click(object sender, EventArgs e)
         {
-            if (stateclick)
+            if (state.Text == "State")
             {
-                // Clear the text box on the first click
                 state.Text = string.Empty;
-                stateclick = false;
             }
         }
         private DateTime startTime;
@@ -119,7 +116,9 @@ namespace Bretxa_s_Discord_Rich_Presence
                     State = state.Text,
                     Assets = new Assets()
                     {
-                        LargeImageKey = (string)comboBox1.SelectedItem
+                        LargeImageKey = (string)comboBox1.SelectedItem,
+                        LargeImageText = largeimagetext.Text,
+                        SmallImageKey = (string)comboBox2.SelectedItem
                     }
                 };
                 if (buttonbox1.Checked && buttonbox2.Checked)
@@ -177,7 +176,9 @@ namespace Bretxa_s_Discord_Rich_Presence
                     State = $"{elapsedTime.ToString(@"hh\:mm\:ss")} elapsed",
                     Assets = new Assets()
                     {
-                        LargeImageKey = (string)comboBox1.SelectedItem
+                        LargeImageKey = (string)comboBox1.SelectedItem,
+                        LargeImageText = largeimagetext.Text,
+                        SmallImageKey = (string)comboBox2.SelectedItem
                     }
                 };
 
@@ -267,6 +268,8 @@ namespace Bretxa_s_Discord_Rich_Presence
 
                     comboBox1.Items.Clear();
                     comboBox1.Items.AddRange(names.ToArray());
+                    comboBox2.Items.Clear();
+                    comboBox2.Items.AddRange(names.ToArray());
                 }
                 catch (Exception ex)
                 {
@@ -286,21 +289,55 @@ namespace Bretxa_s_Discord_Rich_Presence
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int position = names.IndexOf((string)comboBox1.SelectedItem);
-            string selectedId = ids[position];
-            string imageUrl = "https://cdn.discordapp.com/app-assets/" + clientid.Text + "/" + selectedId + ".png";
-            string appLocation = appDataFolderPath + "/previewimage" + imagenum + ".png";
-            imagenum += 1;
-            using (WebClient client = new WebClient())
+            if (!IsValidLink((string)comboBox1.SelectedItem))
             {
                 try
                 {
-                    client.DownloadFile(new Uri(imageUrl), appLocation);
-                    pictureBox5.Image = Image.FromFile(appLocation);
+                    int position = names.IndexOf((string)comboBox1.SelectedItem);
+                    string selectedId = ids[position];
+                    string imageUrl = "https://cdn.discordapp.com/app-assets/" + clientid.Text + "/" + selectedId + ".png";
+                    string appLocation = appDataFolderPath + "/previewimage" + imagenum + ".png";
+                    imagenum += 1;
+                    using (WebClient client = new WebClient())
+                    {
+                        try
+                        {
+                            client.DownloadFile(new Uri(imageUrl), appLocation);
+                            pictureBox5.Image = Image.FromFile(appLocation);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("An error occurred: " + ex.Message);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("An error occurred: " + ex.Message);
+                }
+            }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!IsValidLink((string)comboBox2.SelectedItem))
+            {
+                int position = names.IndexOf((string)comboBox2.SelectedItem);
+                string selectedId = ids[position];
+                string imageUrl = "https://cdn.discordapp.com/app-assets/" + clientid.Text + "/" + selectedId + ".png";
+                string appLocation = appDataFolderPath + "/previewimage" + imagenum + ".png";
+                imagenum += 1;
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        client.DownloadFile(new Uri(imageUrl), appLocation);
+                        pictureBox7.Image = Image.FromFile(appLocation);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("An error occurred: " + ex.Message);
+                    }
                 }
             }
         }
@@ -317,6 +354,18 @@ namespace Bretxa_s_Discord_Rich_Presence
 
         private void save_Click(object sender, EventArgs e)
         {
+            List<string> comboBoxItems = new List<string>();
+            foreach (var item in comboBox1.Items)
+            {
+                comboBoxItems.Add(item.ToString());
+            }
+
+            List<string> comboBox2Items = new List<string>();
+            foreach (var item in comboBox2.Items)
+            {
+                comboBox2Items.Add(item.ToString());
+            }
+
             var jsonObject = new
             {
                 profilenametext = profilename.Text,
@@ -324,6 +373,7 @@ namespace Bretxa_s_Discord_Rich_Presence
                 detailstext = details.Text,
                 statetext = state.Text,
                 imageselected = (string)comboBox1.SelectedItem,
+                smallimageselected = (string)comboBox2.SelectedItem,
                 chebox1 = buttonbox1.CheckState,
                 buttontext1 = textBox1.Text,
                 buttonurl1 = textBox3.Text,
@@ -331,8 +381,9 @@ namespace Bretxa_s_Discord_Rich_Presence
                 buttontext2 = textBox2.Text,
                 buttonurl2 = textBox4.Text,
                 timeelpased = checkBox1.CheckState,
-
-
+                largeimagetext1 = largeimagetext.Text,
+                comboBoxItems = comboBoxItems,
+                comboBox2Items = comboBox2Items
             };
 
             string jsonString = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
@@ -392,14 +443,39 @@ namespace Bretxa_s_Discord_Rich_Presence
                         clientid.Text = (string)json["clientidtext"];
                         details.Text = (string)json["detailstext"];
                         state.Text = (string)json["statetext"];
-                        comboBox1.SelectedItem = (string)json["imageselected"];
                         buttonbox1.Checked = (bool)json["chebox1"];
                         textBox1.Text = (string)json["buttontext1"];
                         textBox3.Text = (string)json["buttonurl1"];
                         buttonbox2.Checked = (bool)json["chebox2"];
+                        comboBox1.Items.Clear();
+                        comboBox1.Text = null;
+
+                        JArray comboBoxItems = (JArray)json["comboBoxItems"];
+                        if (comboBoxItems != null)
+                        {
+                            foreach (var item in comboBoxItems)
+                            {
+                                comboBox1.Items.Add(item.ToString());
+                            }
+                        }
+                        comboBox2.Items.Clear();
+                        comboBox2.Text = null;
+
+                        JArray comboBox2Items = (JArray)json["comboBox2Items"];
+                        if (comboBox2Items != null)
+                        {
+                            foreach (var item in comboBox2Items)
+                            {
+                                comboBox2.Items.Add(item.ToString());
+                            }
+                        }
+                        //button1_Click(sender, e);
                         textBox2.Text = (string)json["buttontext2"];
                         textBox4.Text = (string)json["buttonurl2"];
                         checkBox1.Checked = (bool)json["timeelpased"];
+                        largeimagetext.Text = (string)json["largeimagetext1"];
+                        comboBox1.SelectedItem = (string)json["imageselected"];
+                        comboBox2.SelectedItem = (string)json["smallimageselected"];
                     }
                     catch (Exception ex)
                     {
@@ -462,16 +538,6 @@ namespace Bretxa_s_Discord_Rich_Presence
             ebutton2.Text = textBox2.Text;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
         public static string GetAppDataFolderPath(string appName)
         {
             string appDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), appName);
@@ -507,7 +573,7 @@ namespace Bretxa_s_Discord_Rich_Presence
         {
             base.OnLoad(e);
 
-            this.ShowInTaskbar = false;
+            this.ShowInTaskbar = true;
 
             notifyIcon = new NotifyIcon();
             notifyIcon.Icon = this.Icon;
@@ -531,26 +597,91 @@ namespace Bretxa_s_Discord_Rich_Presence
                 this.WindowState = FormWindowState.Normal;
                 this.Show();
             }
-            //this.BringToFront();
         }
 
         private void CloseMenuItem_Click(object sender, EventArgs e)
         {
+            this.ShowInTaskbar = false;
             this.Close();
         }
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
 
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.Hide();
-            }
-        }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            notifyIcon.Dispose();
+
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                if (this.WindowState != FormWindowState.Minimized)
+                {
+                    this.WindowState = FormWindowState.Minimized;
+                    this.Hide();
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void comboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Handle the Enter key press event to add a link to the ComboBox
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveLink();
+            }
+        }
+
+        private void comboBox1_Leave(object sender, EventArgs e)
+        {
+            SaveLink();
+        }
+
+        private void SaveLink()
+        {
+            string text = comboBox1.Text.Trim();
+
+            // Check if the entered text is a valid link and not already present in the ComboBox
+            if (IsValidLink(text) && !comboBox1.Items.Contains(text))
+            {
+                comboBox1.Items.Add(text);
+            }
+        }
+
+        private void comboBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Handle the Enter key press event to add a link to the ComboBox
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveLink1();
+            }
+        }
+
+        private void comboBox2_Leave(object sender, EventArgs e)
+        {
+            SaveLink1();
+        }
+
+        private void SaveLink1()
+        {
+            string text = comboBox2.Text.Trim();
+
+            // Check if the entered text is a valid link and not already present in the ComboBox
+            if (IsValidLink(text) && !comboBox2.Items.Contains(text))
+            {
+                comboBox2.Items.Add(text);
+            }
+        }
+
+        private bool IsValidLink(string text)
+        {
+            // Validate the entered text as a link
+            Uri uriResult;
+            return Uri.TryCreate(text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+        }
+
+        private void appcache_Click(object sender, EventArgs e)
+        {
+            string appName = "BretxaRichPresenceDiscord";
+            appDataFolderPath = GetAppDataFolderPath(appName);
+            Process.Start(appDataFolderPath);
         }
     }
 }
