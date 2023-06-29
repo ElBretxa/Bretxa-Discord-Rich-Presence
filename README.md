@@ -1,5 +1,5 @@
 <h1 align="center">
-    <a href="#"><img src="https://media.discordapp.net/attachments/1061361693650845736/1123377850968453120/image.png?width=854&height=434" width="450" alt="SERVER UP BOT"></a>
+    <a href="#"><img src="https://media.discordapp.net/attachments/1061361693650845736/1124097544625062020/image.png?width=854&height=434" width="500" alt="SERVER UP BOT"></a>
     
    ⚡ Bretxa's Discord Rich Presence App ⚡
 </h1>
@@ -22,7 +22,7 @@ Before using this application, you need to have the following:
 
 ## Installation
 
-Download the executable from [here](https://cdn.discordapp.com/attachments/1058794706613571744/1119647672899481701/Bretxas_Discord_Rich_Presence.exe) and start it directly!
+Download the executable from [here](https://github.com/ElBretxa/Bretxa-Discord-Rich-Presence/releases) and start it directly!
 
 1. Clone or download this repository to your local machine.
 2. Open the project in your preferred C# development environment.
